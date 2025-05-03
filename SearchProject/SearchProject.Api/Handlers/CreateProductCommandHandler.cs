@@ -1,0 +1,32 @@
+﻿using MediatR;
+using SearchProject.Api.Command;
+using SearchProject.Interfaces;
+using SearchProject.Entities;
+
+namespace SearchProject.Api.Handlers
+{
+    public class CreateMovieCommandHandler : IRequestHandler<CreateMovieCommand, Movies>
+    {
+        private readonly IMovieRepository _MovieRepository;
+
+        public CreateMovieCommandHandler(IMovieRepository MovieRepository)
+        {
+            _MovieRepository = MovieRepository;
+        }
+
+        public async Task<Movies> Handle(CreateMovieCommand request, CancellationToken cancellationToken)
+        {
+            var movies = new Movies
+            {
+                Title = request.Title,
+                Genre = request.Genre,
+                Description = request.Description,
+                Rating = request.Rating,
+                PublishedDate = DateTime.Now
+            };
+
+            await _MovieRepository.AddAsync(movies);
+            return movies;
+        }
+    }
+}

@@ -1,0 +1,15 @@
+C:\ABB\SearchTestProj\RepositoryImplementation\RepositoryImplementation\bin\Debug\net8.0\RepositoryImplementation.deps.json
+C:\ABB\SearchTestProj\RepositoryImplementation\RepositoryImplementation\bin\Debug\net8.0\RepositoryImplementation.dll
+C:\ABB\SearchTestProj\RepositoryImplementation\RepositoryImplementation\bin\Debug\net8.0\RepositoryImplementation.pdb
+C:\ABB\SearchTestProj\RepositoryImplementation\RepositoryImplementation\bin\Debug\net8.0\EnititiesLibrary.dll
+C:\ABB\SearchTestProj\RepositoryImplementation\RepositoryImplementation\bin\Debug\net8.0\RepositoryInterfaces.dll
+C:\ABB\SearchTestProj\RepositoryImplementation\RepositoryImplementation\obj\Debug\net8.0\RepositoryImplementation.csproj.AssemblyReference.cache
+C:\ABB\SearchTestProj\RepositoryImplementation\RepositoryImplementation\obj\Debug\net8.0\RepositoryImplementation.GeneratedMSBuildEditorConfig.editorconfig
+C:\ABB\SearchTestProj\RepositoryImplementation\RepositoryImplementation\obj\Debug\net8.0\RepositoryImplementation.AssemblyInfoInputs.cache
+C:\ABB\SearchTestProj\RepositoryImplementation\RepositoryImplementation\obj\Debug\net8.0\RepositoryImplementation.AssemblyInfo.cs
+C:\ABB\SearchTestProj\RepositoryImplementation\RepositoryImplementation\obj\Debug\net8.0\RepositoryImplementation.csproj.CoreCompileInputs.cache
+C:\ABB\SearchTestProj\RepositoryImplementation\RepositoryImplementation\obj\Debug\net8.0\Reposito.C88CE4C7.Up2Date
+C:\ABB\SearchTestProj\RepositoryImplementation\RepositoryImplementation\obj\Debug\net8.0\RepositoryImplementation.dll
+C:\ABB\SearchTestProj\RepositoryImplementation\RepositoryImplementation\obj\Debug\net8.0\refint\RepositoryImplementation.dll
+C:\ABB\SearchTestProj\RepositoryImplementation\RepositoryImplementation\obj\Debug\net8.0\RepositoryImplementation.pdb
+C:\ABB\SearchTestProj\RepositoryImplementation\RepositoryImplementation\obj\Debug\net8.0\ref\RepositoryImplementation.dll
