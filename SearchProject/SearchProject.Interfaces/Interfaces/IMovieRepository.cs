@@ -14,6 +14,6 @@ namespace SearchProject.Interfaces
         /// <param name="genre"></param>
         /// <param name="sort"></param>
         /// <returns></returns>
-        Task<MovieSearchResult> SearchAsync(string searchQuery, string genre, string sort, int page, int pageSize);
+        Task<MovieSearchResult> SearchAsync(string userName, string searchQuery, string genre, string sortBy, int page, int pageSize);
     }
 }

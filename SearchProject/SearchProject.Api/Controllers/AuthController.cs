@@ -50,7 +50,7 @@ namespace SearchProject.Api.Controllers
         /// <param name="command"></param>
         /// <returns></returns>
         [HttpPost("refresh")]
-        [Authorize]
+        [AllowAnonymous]
         public async Task<IActionResult> Refresh([FromBody] RefreshTokenCommand command)
         {
             try

@@ -2,6 +2,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SearchProject.Api.Command;
+using SearchProject.Api.Domain;
 using SearchProject.Query;
 using System.ComponentModel.DataAnnotations;
 
@@ -35,13 +36,13 @@ namespace SearchProject.Controllers
         /// <param name="page"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        [HttpGet]
+        [HttpGet("Search")]
         [Authorize]
-        public async Task<IActionResult> Search([FromQuery] string searchQuery, [FromQuery] string genre, [FromQuery] string sortBy, [FromQuery] int page, [FromQuery] int pageSize)
+        public async Task<IActionResult> Search([FromQuery]SearchRequest searchRequest)
         {
             try
             {
-                var result = await _mediator.Send(new SearchMoviesQuery(searchQuery, genre, sortBy, page, pageSize));
+                var result = await _mediator.Send(new SearchMoviesQuery(searchRequest));
                 return Ok(result);
             }
             catch (ValidationException ex)
@@ -62,7 +63,7 @@ namespace SearchProject.Controllers
         /// </summary>
         /// <param name="command"></param>
         /// <returns></returns>
-        [HttpPost]
+        [HttpPost("Create")]
         [Authorize]
         public async Task<IActionResult> Create([FromBody] CreateMovieCommand command)
         {

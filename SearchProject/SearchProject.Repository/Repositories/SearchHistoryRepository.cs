@@ -23,11 +23,10 @@ namespace SearchProject.Repository.Repositories
 
         public async Task<List<SearchHistory>> GetByUsernameAsync(string username)
         {
-            return new List<SearchHistory>();
-            //return await _context.SearchHistories
-            //    .Where(h => h.Username == username)
-            //    .OrderByDescending(h => h.SearchedDate)
-            //    .ToListAsync();
+            return await _context.SearchHistories
+                .Where(h => h.User.Username == username)
+                .OrderByDescending(h => h.SearchedDate)
+                .ToListAsync();
         }
     }
 }

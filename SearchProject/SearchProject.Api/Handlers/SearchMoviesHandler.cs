@@ -16,7 +16,8 @@ namespace SearchProject.Handlers
 
         public async Task<MovieSearchResult> Handle(SearchMoviesQuery queryRequest, CancellationToken cancellationToken)
         {
-            return await _repository.SearchAsync(queryRequest.searchQuery, queryRequest.genre, queryRequest.sortBy, queryRequest.Page, queryRequest.PageSize);
+            return await _repository.SearchAsync(queryRequest.SearchRequest.Username, queryRequest.SearchRequest.SearchQuery,
+                queryRequest.SearchRequest.Genre, queryRequest.SearchRequest.SortBy, queryRequest.SearchRequest.Page, queryRequest.SearchRequest.PageSize);
         }
     }
 }

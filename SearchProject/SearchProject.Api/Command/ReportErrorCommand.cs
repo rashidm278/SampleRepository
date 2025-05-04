@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using SearchProject.Command;
 using SearchProject.Entities;
 
 namespace SearchProject.Api.Command

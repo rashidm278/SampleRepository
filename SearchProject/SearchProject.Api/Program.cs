@@ -1,17 +1,17 @@
-using Microsoft.OpenApi.Models;
-using SearchProject.Interfaces;
-using SearchProject.Repository.Repositories;
-using SearchProject;
-using SearchProject.Middleware;
-using System.Threading.RateLimiting;
-using SearchProject.Repository.Data;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
-using SearchProject.Interfaces.Interfaces;
-using System.Reflection;
 using MediatR;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+using SearchProject;
+using SearchProject.Interfaces;
+using SearchProject.Interfaces.Interfaces;
+using SearchProject.Middleware;
+using SearchProject.Repository.Data;
+using SearchProject.Repository.Repositories;
+using System.Reflection;
+using System.Text;
+using System.Threading.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,11 +22,25 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddCors(options =>
 {
-    options.AddDefaultPolicy(builder =>
+    options.AddPolicy("AllowAllOrigins", policy =>
+        policy.AllowAnyMethod()
+              .AllowAnyHeader()
+              .SetIsOriginAllowed(_ => true)
+              .AllowCredentials());
+
+    options.AddPolicy("AllowSpecific", policy =>
     {
-        builder.WithOrigins("http://localhost:3000")
-               .AllowAnyHeader()
-               .AllowAnyMethod();
+        var config = builder.Configuration;
+        policy.WithOrigins(config.GetSection("Cors:Origins").Get<string[]>() ?? Array.Empty<string>())
+              .WithHeaders(config.GetSection("Cors:Headers").Get<string[]>() ?? Array.Empty<string>())
+              .WithMethods(config.GetSection("Cors:Methods").Get<string[]>() ?? Array.Empty<string>());
+    });
+
+    options.AddDefaultPolicy(policy =>
+    {
+        policy.WithOrigins("http://localhost:3000")
+              .AllowAnyHeader()
+              .AllowAnyMethod();
     });
 });
 builder.Services.AddMemoryCache();
@@ -46,7 +60,7 @@ builder.Services.AddRateLimiter(options =>
     options.RejectionStatusCode = 429;
 });
 builder.Services.AddResponseCaching();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
 builder.Services.AddTransient<IMovieRepository, MovieRepository>();

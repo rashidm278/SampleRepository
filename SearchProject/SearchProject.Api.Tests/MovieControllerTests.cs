@@ -1,71 +1,135 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
+using NUnit.Framework;
 using SearchProject.Api.Command;
+using SearchProject.Api.Domain;
 using SearchProject.Controllers;
 using SearchProject.Query;
 using SearchProject.Entities;
 
-namespace SearchProject.Tests
+
+namespace SearchProject.Tests.Controllers
 {
     [TestFixture]
     public class MovieControllerTests
     {
-        private MovieController _controller;
-        private Mock<IMediator> _mediatorMock;
         private Mock<ILogger<MovieController>> _loggerMock;
+        private Mock<IMediator> _mediatorMock;
+        private MovieController _controller;
 
         [SetUp]
-        public void Setup()
+        public void SetUp()
         {
-            _mediatorMock = new Mock<IMediator>();
             _loggerMock = new Mock<ILogger<MovieController>>();
+            _mediatorMock = new Mock<IMediator>();
             _controller = new MovieController(_loggerMock.Object, _mediatorMock.Object);
         }
 
         [Test]
-        public async Task Search_ReturnsOk_WithResults()
+        public async Task Search_ReturnsOkResult_WhenSuccessful()
         {
-            // Arrange
-            var movies = new List<Movies> {
-                new Movies { MovieId = 1, Title = "Test Movie", Genre = "Action" }
+            var request = new SearchRequest();
+            var movies = new List<Movies> { new Movies { Title = "Test" } };
+            var movieSearchResult = new MovieSearchResult()
+            {
+                Items = movies,
+                Page = 1,
             };
 
-            var expectedResults = new MovieSearchResult() { Items = movies, TotalCount = 100, PageSize = 10, Page = 1 };
+            _mediatorMock.Setup(m => m.Send(It.IsAny<SearchMoviesQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(movieSearchResult);
 
-            _mediatorMock
-                .Setup(m => m.Send(It.IsAny<SearchMoviesQuery>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(expectedResults);
+            var result = await _controller.Search(request);
 
-            // Act
-            var result = await _controller.Search("query", "genre", "sort", 1, 10) as OkObjectResult;
-
-            // Assert
-            Assert.IsNotNull(result);
-            Assert.AreEqual(200, result.StatusCode);
-            Assert.AreEqual(expectedResults, result.Value);
+            Assert.IsInstanceOf<OkObjectResult>(result);
+            var okResult = (OkObjectResult)result;
+            Assert.AreEqual(movieSearchResult, okResult.Value);
         }
 
         [Test]
-        public async Task Create_ReturnsCreated_WithMovie()
+        public async Task Search_ReturnsBadRequest_OnValidationException()
         {
-            // Arrange
-            var createCommand = new CreateMovieCommand { Title = "Movie A" };
-            var createdMovie = new Movies { MovieId = 1, Title = "Movie A" };
+            var request = new SearchRequest();
+            _mediatorMock.Setup(m => m.Send(It.IsAny<SearchMoviesQuery>(), default))
+                         .ThrowsAsync(new ValidationException("Invalid search"));
 
-            _mediatorMock
-                .Setup(m => m.Send(createCommand, It.IsAny<CancellationToken>()))
-                .ReturnsAsync(createdMovie);
+            var result = await _controller.Search(request);
 
-            // Act
-            var result = await _controller.Create(createCommand) as CreatedAtActionResult;
+            Assert.IsInstanceOf<BadRequestObjectResult>(result);
+            var badRequest = (BadRequestObjectResult)result;
+            StringAssert.Contains("Invalid search", badRequest.Value.ToString());
+        }
 
-            // Assert
-            Assert.IsNotNull(result);
-            Assert.AreEqual(201, result.StatusCode);
-            Assert.AreEqual("GetById", result.ActionName);
-            Assert.AreEqual(createdMovie, result.Value);
+        [Test]
+        public void Search_Throws_OnUnhandledException()
+        {
+            var request = new SearchRequest();
+            _mediatorMock.Setup(m => m.Send(It.IsAny<SearchMoviesQuery>(), default))
+                         .ThrowsAsync(new Exception("Unhandled"));
+
+            var ex = Assert.ThrowsAsync<Exception>(() => _controller.Search(request));
+            Assert.AreEqual("Unhandled", ex.Message);
+        }
+
+        // ---------- Create Tests ----------
+
+        [Test]
+        public async Task Create_ReturnsCreatedAtResult_WhenSuccessful()
+        {
+            var command = new CreateMovieCommand() { Title = "m1"};
+            var movieDto = new Movies { MovieId = 1, Title = "Test" };
+
+
+            _mediatorMock.Setup(m => m.Send(command, It.IsAny<CancellationToken>()))
+                         .ReturnsAsync(movieDto);
+
+            var result = await _controller.Create(command);
+
+            Assert.IsInstanceOf<CreatedAtActionResult>(result);
+            var createdAt = (CreatedAtActionResult)result;
+            Assert.AreEqual("GetById", createdAt.ActionName);
+            Assert.AreEqual(movieDto.MovieId, ((Movies)createdAt.Value).MovieId);
+        }
+
+        [Test]
+        public async Task Create_ReturnsBadRequest_OnValidationException()
+        {
+            var command = new CreateMovieCommand();
+
+            _mediatorMock.Setup(m => m.Send(command, default))
+                         .ThrowsAsync(new ValidationException("Validation failed"));
+
+            var result = await _controller.Create(command);
+
+            Assert.IsInstanceOf<BadRequestObjectResult>(result);
+            var badRequest = (BadRequestObjectResult)result;
+            StringAssert.Contains("Validation failed", badRequest.Value.ToString());
+        }
+
+        [Test]
+        public void Create_Throws_OnUnhandledException()
+        {
+            var command = new CreateMovieCommand();
+
+            _mediatorMock.Setup(m => m.Send(command, default))
+                         .ThrowsAsync(new Exception("Create failed"));
+
+            var ex = Assert.ThrowsAsync<Exception>(() => _controller.Create(command));
+            Assert.AreEqual("Create failed", ex.Message);
+        }
+
+        [Test]
+        public async Task GetById_ReturnsOk()
+        {
+            var result = await _controller.GetById(1);
+
+            Assert.IsInstanceOf<OkResult>(result);
         }
     }
 }

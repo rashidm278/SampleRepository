@@ -10,7 +10,7 @@ namespace SearchProject.Repository.Repositories
     /// </summary>
     public class MovieRepository : IMovieRepository
     {
-        
+
         private readonly AppDbContext _context;
 
         /// <summary>
@@ -41,13 +41,21 @@ namespace SearchProject.Repository.Repositories
         /// <param name="genre"></param>
         /// <param name="sort"></param>
         /// <returns></returns>
-        public async Task<MovieSearchResult> SearchAsync(string searchQuery, string genre, string sortBy, int page, int pageSize)
+        public async Task<MovieSearchResult> SearchAsync(string userName, string searchQuery, string genre, string sortBy, int page, int pageSize)
         {
-            _context.SearchHistories.Add(new SearchHistory
+            if (!string.IsNullOrWhiteSpace(searchQuery))
             {
-                SearchQuery = searchQuery,
-                SearchedDate = DateTime.Now
-            });
+                var user = _context.User.FirstOrDefault(u => u.Username == userName);
+                if (user != null)
+                {
+                    _context.SearchHistories.Add(new SearchHistory
+                    {
+                        SearchQuery = searchQuery,
+                        SearchedDate = DateTime.Now,
+                        UserId = user.UserId
+                    });
+                }
+            }
             await _context.SaveChangesAsync();
 
             // Perform search and filtering
@@ -55,7 +63,7 @@ namespace SearchProject.Repository.Repositories
 
             if (!string.IsNullOrWhiteSpace(genre))
             {
-                query = query.Where(i => i.Genre.Equals(genre, StringComparison.OrdinalIgnoreCase));
+                query = query.Where(i => i.Genre.ToLower() == genre.ToLower());
             }
 
             if (!string.IsNullOrWhiteSpace(searchQuery))

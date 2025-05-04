@@ -22,7 +22,8 @@ namespace SearchProject.Api.Handlers
                 Genre = request.Genre,
                 Description = request.Description,
                 Rating = request.Rating,
-                PublishedDate = DateTime.Now
+                PublishedDate = DateTime.Now,
+                Content = request.Description
             };
 
             await _MovieRepository.AddAsync(movies);
