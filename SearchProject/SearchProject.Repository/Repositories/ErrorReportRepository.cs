@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using SearchProject.Entities;
-using SearchProject.Interfaces.Interfaces;
+using SearchProject.Domain.Entities;
+using SearchProject.Domain.Interfaces;
 using SearchProject.Repository.Data;
 
 namespace SearchProject.Repository.Repositories

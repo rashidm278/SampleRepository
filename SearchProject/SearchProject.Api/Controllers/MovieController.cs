@@ -1,8 +1,8 @@
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SearchProject.Api.Command;
-using SearchProject.Api.Domain;
+using SearchProject.Application.Command;
+using SearchProject.Application.Dtos;
 using SearchProject.Query;
 using System.ComponentModel.DataAnnotations;
 

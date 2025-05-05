@@ -12,8 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SearchProject.Entities\SearchProject.Entities.csproj" />
-    <ProjectReference Include="..\SearchProject.Interfaces\SearchProject.Interfaces.csproj" />
+    <ProjectReference Include="..\SearchProject.Domain\SearchProject.Domain.csproj" />
   </ItemGroup>
 
 </Project>

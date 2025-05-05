@@ -1,7 +1,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SearchProject.Api.Command;
+using SearchProject.Application.Command;
 
 namespace SearchProject.Controllers
 {

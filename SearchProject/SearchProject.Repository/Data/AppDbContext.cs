@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using SearchProject.Entities;
+using SearchProject.Domain.Entities;
 
 namespace SearchProject.Repository.Data
 {
@@ -32,6 +32,18 @@ namespace SearchProject.Repository.Data
                 .HasForeignKey(sh => sh.UserId);
         }
 
+        public override int SaveChanges()
+        {
+            UpdateTimeStamps();
+            return base.SaveChanges();
+        }
+
+        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            UpdateTimeStamps();
+            return await base.SaveChangesAsync(cancellationToken);
+        }
+
         /// <summary>
         /// Movies db set
         /// </summary>
@@ -51,5 +63,27 @@ namespace SearchProject.Repository.Data
         /// Eroor reports db set
         /// </summary>
         public DbSet<ErrorReport> ErrorReports { get; set; }
+
+
+        private void UpdateTimeStamps()
+        {
+            var entries = ChangeTracker
+                .Entries<BaseEntity>();
+            foreach (var entry in entries)
+            {
+                var now = DateTime.UtcNow;
+                if (entry.State == EntityState.Added) 
+                { 
+                    entry.Entity.CreatedAt = now;
+                    entry.Entity.UpdatedAt = now;
+
+                }
+                else if (entry.State == EntityState.Modified)
+                {
+                    entry.Entity.UpdatedAt = now;
+                    entry.Property(x => x.CreatedAt).IsModified = false;
+                }
+            }
+        }
     }
 }

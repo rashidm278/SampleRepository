@@ -1,17 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
-using NUnit.Framework;
-using SearchProject.Api.Command;
-using SearchProject.Api.Domain;
+using SearchProject.Application.Command;
 using SearchProject.Controllers;
+using SearchProject.Domain.Entities;
+using SearchProject.Application.Dtos;
 using SearchProject.Query;
-using SearchProject.Entities;
+using System.ComponentModel.DataAnnotations;
 
 
 namespace SearchProject.Tests.Controllers

@@ -4,12 +4,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using SearchProject;
-using SearchProject.Interfaces;
-using SearchProject.Interfaces.Interfaces;
+using SearchProject.Application.Handlers;
+using SearchProject.Application.Dtos;
+using SearchProject.Domain.Interfaces;
 using SearchProject.Middleware;
 using SearchProject.Repository.Data;
 using SearchProject.Repository.Repositories;
-using System.Reflection;
 using System.Text;
 using System.Threading.RateLimiting;
 
@@ -60,9 +60,11 @@ builder.Services.AddRateLimiter(options =>
     options.RejectionStatusCode = 429;
 });
 builder.Services.AddResponseCaching();
+builder.Services.Configure<AuthSettings>(
+    builder.Configuration.GetSection("Jwt"));
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
+builder.Services.AddMediatR(typeof(LoginCommandHandler).Assembly);
 builder.Services.AddTransient<IMovieRepository, MovieRepository>();
 builder.Services.AddScoped<IErrorReportRepository, ErrorReportRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>(); 
@@ -73,7 +75,7 @@ builder.Services.AddSwaggerGen(c =>
      {
          Version = "1.0",
          Title = "SEARCH PROJECT",
-         Description = "API for search",
+         Description = "A ASP .NET Core Project for search",
      });
      c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
      {
@@ -97,6 +99,9 @@ builder.Services.AddSwaggerGen(c =>
                     Array.Empty<string>()
                 }
              });
+     var xmlFile = $"{System.Reflection.Assembly.GetExecutingAssembly().GetName().Name}.xml";
+     var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+     c.IncludeXmlComments(xmlPath);
  });
 
 var jwtSettings = builder.Configuration.GetSection("Jwt");

@@ -4,6 +4,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+	  <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -24,8 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SearchProject.Entities\SearchProject.Entities.csproj" />
-    <ProjectReference Include="..\SearchProject.Interfaces\SearchProject.Interfaces.csproj" />
+    <ProjectReference Include="..\SearchProject.Application\SearchProject.Application.csproj" />
     <ProjectReference Include="..\SearchProject.Repository\SearchProject.Repository.csproj" />
   </ItemGroup>
 
