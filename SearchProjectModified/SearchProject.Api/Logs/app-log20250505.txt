@@ -1,0 +1,5 @@
+[2025-05-05 23:33:45 WRN] Failed to determine the https port for redirect.
+[2025-05-05 23:33:45 INF] Request : GET /swagger
+[2025-05-05 23:33:45 INF] Response : 404
+[2025-05-05 23:34:06 INF] Request : POST /api/Auth/login
+[2025-05-05 23:34:07 INF] Response : 400

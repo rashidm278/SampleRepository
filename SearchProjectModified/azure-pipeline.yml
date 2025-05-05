@@ -1,0 +1,37 @@
+trigger:
+  branches:
+    include:
+      - dev
+
+pool:
+  vmImage: 'windows-latest'
+
+variables:
+  buildConfiguration: 'Dev'
+
+steps:
+# Step 1: Checkout code
+- task: UseDotNet@2
+  inputs:
+    packageType: 'sdk'
+    version: '8.x'
+    installationPath: $(Agent.ToolsDirectory)/dotnet
+
+# Step 2: Restore dependencies
+- script: dotnet restore
+  displayName: 'Restore dependencies'
+
+# Step 3: Build the project
+- script: dotnet build --configuration $(buildConfiguration) --no-restore
+  displayName: 'Build'
+
+# Step 4: Run unit tests
+- script: dotnet test --no-build --verbosity normal
+  displayName: 'Run Tests'
+
+# Step 5: Publish output
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
