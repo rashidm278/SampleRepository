@@ -70,7 +70,7 @@ namespace SearchProject.Controllers
             try
             {
                 var movie = await _mediator.Send(command);
-                return CreatedAtAction(nameof(GetById), new { id = movie.MovieId }, movie);
+                return Ok(movie);
             }
             catch (ValidationException ex)
             {
@@ -81,20 +81,6 @@ namespace SearchProject.Controllers
                 _logger.LogError(ex, "Unexpected Error");
                 throw;
             }
-        }
-
-
-        /// <summary>
-        /// method to get movie by id
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        [HttpGet("{id}")]
-        [Authorize]
-        public async Task<IActionResult> GetById(int id)
-        {
-            // TODO: Implement GetById logic via repository
-            return Ok();
         }
     }
 }

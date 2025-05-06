@@ -35,7 +35,7 @@ namespace SearchProject.Controllers
             try
             {
                 var user = await _mediator.Send(command);
-                return CreatedAtAction(nameof(GetByUsername), new { username = user.Username }, user);
+                return Ok(user);
             }
             catch (ArgumentException ex)
             {
@@ -46,19 +46,6 @@ namespace SearchProject.Controllers
                 _logger.LogError(ex, "Unexpected Error");
                 throw;
             }
-        }
-        
-        /// <summary>
-        /// method to get user by name
-        /// </summary>
-        /// <param name="username"></param>
-        /// <returns></returns>
-        [HttpGet("{username}")]
-        [Authorize]
-        public async Task<IActionResult> GetByUsername(string username)
-        {
-            // TODO: Implement GetById logic via repository
-            return Ok();
         }
     }
 }
